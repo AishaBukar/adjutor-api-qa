@@ -1,0 +1,320 @@
+{
+  "info": {
+    "_postman_id": "4e7afbe3-e479-4752-8d81-76200f644af9",
+    "name": "adjutor-api-testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18037138",
+    "_collection_link": "https://go.postman.co/collection/18037138-4e7afbe3-e479-4752-8d81-76200f644af9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "nigerian-banks",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.expect(pm.response.code).to.eql(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains status field\", function () {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"status\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains message field\", function () {\r",
+              "    pm.expect(pm.response.json()).to.have.property(\"message\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v2/direct-debit/banks\n",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "direct-debit",
+            "banks\n"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "bvn-verification",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status must be OTP request (or 200)\", () => {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains status and message\", () => {\r",
+              "    const json = pm.response.json();\r",
+              "    pm.expect(json).to.have.property(\"status\");\r",
+              "    pm.expect(json).to.have.property(\"message\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "bvn",
+            "value": "2222222222",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"contact\": \"22000000076\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/v2/verification/bvn/{{bvn}}/accounts\n",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "verification",
+            "bvn",
+            "{{bvn}}",
+            "accounts\n"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "bvn-verification-otp",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains BVN data\", () => {\r",
+              "    const json = pm.response.json();\r",
+              "    pm.expect(json).to.have.property(\"data\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"otp\": \"123456\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/v2/verification/bvn/:bvn",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "verification",
+            "bvn",
+            ":bvn"
+          ],
+          "variable": [
+            {
+              "key": "bvn",
+              "value": "12345678987"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "direct-debit-mandate",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v2/direct-debit/mandates\n",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "direct-debit",
+            "mandates\n"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "verify-customer-account",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/v2/verification/ecosystem/:bvn",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "verification",
+            "ecosystem",
+            ":bvn"
+          ],
+          "variable": [
+            {
+              "key": "bvn",
+              "value": "12345678987"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "verify-nin",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v2/verification/nin/:nin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v2",
+            "verification",
+            "nin",
+            ":nin"
+          ],
+          "variable": [
+            {
+              "key": "nin",
+              "value": "12345678987"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "mandate-details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}v2/direct-debit/mandates?reference_number=12345678",
+          "host": [
+            "{{base_url}}v2"
+          ],
+          "path": [
+            "direct-debit",
+            "mandates"
+          ],
+          "query": [
+            {
+              "key": "reference_number",
+              "value": "12345678"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{api_key}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
